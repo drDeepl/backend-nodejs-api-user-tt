@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
 import { CreateUserDto } from '../Dto/user/create-user.dto';
+import UserService from '../Services/user.service';
+import httpStatus from 'http-status';
+import ApiError from '../utils/ApiError';
 
 class UserController {
   register = async (req: Request, res: Response) => {
@@ -11,9 +14,15 @@ class UserController {
 
     const { error, value } = createUserDto.validate();
     if (error) {
-      res.send(error.message);
+      const errorMessage = error.details
+        .map((details) => details.message)
+        .join(', ');
+      console.log(errorMessage);
+      const statusCode = httpStatus.BAD_REQUEST;
+      res.status(statusCode).send(new ApiError(statusCode, errorMessage));
     } else {
-      res.status(201).send(value);
+      await UserService.createUser(createUserDto);
+      res.status(httpStatus.CREATED).send(value);
     }
   };
 }

@@ -1,16 +1,28 @@
 import Joi from 'joi';
 export class CreateUserDto {
   private readonly schema = Joi.object({
-    firstName: Joi.string().required(),
-    email: Joi.string().required(),
+    firstName: Joi.string().required().messages({
+      'string.empty': 'поле с именем не может быть пустым',
+      'any.required': 'имя является обязательным полем',
+    }),
+    email: Joi.string().required().messages({
+      'string.empty': 'поле с электронная почтой не может быть пустым',
+      'any.required': 'электронная почта является обязательным полем',
+    }),
     password: Joi.string()
       .required()
+      .messages({
+        'string.empty': 'поле с паролем не может быть пустым',
+        'any.required': 'пароль является обязательным полем',
+        'string.pattern':
+          'пароль должен содержать буквы латинского алфавита и иметь длину от 5 до 30 символов',
+      })
       .pattern(new RegExp('^[a-zA-Z0-9]{5,30}$')),
   });
 
-  readonly firstName: string;
-  readonly email: string;
-  readonly password: string;
+  firstName: string;
+  email: string;
+  password: string;
 
   constructor(firstName: string, email: string, password: string) {
     this.firstName = firstName;
