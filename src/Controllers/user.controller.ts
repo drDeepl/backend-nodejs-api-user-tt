@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { CreateUserDto } from '../Dto/user/create-user.dto';
 import UserService from '../Services/user.service';
 import httpStatus from 'http-status';
 import ApiError from '../utils/ApiError';
+import { CreateUserDto } from '../Dto/user/create-user.dto';
 
 class UserController {
   register = async (req: Request, res: Response) => {

@@ -1,5 +1,5 @@
 import { Server } from 'http';
-import prisma from './prisma/index';
+import prisma from '../prisma/index';
 import config from './Config/env.config';
 import logger from './Config/logger';
 import app from './app';

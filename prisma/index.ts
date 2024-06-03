@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import config from '../Config/env.config';
+import config from '../src/Config/env.config';
 
 interface PrismaNodeJsGlobal extends Global {
   prisma: PrismaClient;
