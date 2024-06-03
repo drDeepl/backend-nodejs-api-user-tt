@@ -2,15 +2,23 @@ import ApiError from './ApiError';
 import httpStatus from 'http-status';
 
 export class PrismaExceptionHandler {
-  private readonly errorMessages: { [key: string]: string };
-  constructor(errorMessages: { [key: string]: string }) {
+  private readonly errorMessages: {
+    [key: string]: { statusCode: number; description: string };
+  };
+  constructor(errorMessages: {
+    [key: string]: { statusCode: number; description: string };
+  }) {
     this.errorMessages = errorMessages;
   }
-  public handleError(error: any): void {
+  public handleError(error: any): ApiError {
     if (error.code in this.errorMessages) {
       console.error(`Prisma Error: ${this.errorMessages[error.code]}`);
-    } else {
-      console.error(`Prisma Error: ${error.message}`);
+      return new ApiError(
+        this.errorMessages[error.code].statusCode,
+        this.errorMessages[error.code].description,
+      );
     }
+    console.error(`Prisma Error: ${error.message}`);
+    return new ApiError(httpStatus.BAD_GATEWAY, error.message);
   }
 }

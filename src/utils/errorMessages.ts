@@ -1,3 +1,5 @@
+import httpStatus from 'http-status';
+
 export const prismaErrorMessages: { [key: string]: string } = {
   P2002:
     'Unique constraint violation error. A record with the same unique value already exists.',
@@ -21,4 +23,29 @@ export const prismaErrorMessages: { [key: string]: string } = {
     'Unique index violation error. A unique index constraint was violated.',
   P2035:
     'Foreign key index violation error. A foreign key index constraint was violated.',
+};
+
+export const userPrismaErrorMessage: {
+  [key: string]: { statusCode: number; description: string };
+} = {
+  P2002: {
+    statusCode: httpStatus.FORBIDDEN,
+    description: 'Пользователь с такой электронной почтой уже существует',
+  },
+  P2013: {
+    statusCode: httpStatus.BAD_REQUEST,
+    description: 'Пропущено одно из обязательных полей',
+  },
+  P2015: {
+    statusCode: httpStatus.BAD_REQUEST,
+    description: 'Обязательное поле не может быть null',
+  },
+  P2016: {
+    statusCode: httpStatus.BAD_REQUEST,
+    description: 'Превышено допустимое количество символов',
+  },
+  P2025: {
+    statusCode: httpStatus.NOT_FOUND,
+    description: 'Запрашиваемый пользователь не существует',
+  },
 };

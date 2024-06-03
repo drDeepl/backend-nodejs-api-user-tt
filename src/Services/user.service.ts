@@ -2,15 +2,14 @@ import { Prisma } from '@prisma/client';
 import { CreateUserDto } from '../Dto/user/create-user.dto';
 import prisma from '../prisma';
 import { hashData } from '../utils/bcrypt';
-import { prismaErrorMessages } from '../utils/errorMessages';
+import { userPrismaErrorMessage } from '../utils/errorMessages';
 import { PrismaExceptionHandler } from '../utils/PrismaExceptionHandler';
 import ApiError from '../utils/ApiError';
 import httpStatus from 'http-status';
-import logger from '../Config/logger';
 
 class UserService {
   private readonly userExceptionHandler = new PrismaExceptionHandler(
-    prismaErrorMessages,
+    userPrismaErrorMessage,
   );
   async createUser(dto: CreateUserDto): Promise<any> {
     try {
@@ -24,9 +23,9 @@ class UserService {
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        this.userExceptionHandler.handleError(error.code);
+        throw this.userExceptionHandler.handleError(error);
       } else {
-        return new ApiError(httpStatus.BAD_GATEWAY, 'что-то пошло не так');
+        throw new ApiError(httpStatus.BAD_GATEWAY, 'что-то пошло не так');
       }
     }
   }
