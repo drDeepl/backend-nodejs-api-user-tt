@@ -1,6 +1,6 @@
 import express from 'express';
 // import { db } from "./Config/db.config";
-import { authRouter } from './Routes/auth.routes';
+import { authRouter } from './Routes/profile.routes';
 
 const app = express();
 
