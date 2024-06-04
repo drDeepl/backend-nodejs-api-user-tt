@@ -60,6 +60,7 @@ class UserService {
     userId: number,
     dto: EditUserDto,
   ): Promise<EditedUserDtoInterface> {
+    console.log(dto);
     return prisma.user
       .update({
         select: {

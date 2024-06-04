@@ -19,9 +19,9 @@ const verifyCallback =
     }
     req.user = user;
 
-    if (req.params.userId !== user.id) {
-      return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
-    }
+    // if (req.params.userId !== user.id) {
+    //   return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
+    // }
 
     resolve();
   };

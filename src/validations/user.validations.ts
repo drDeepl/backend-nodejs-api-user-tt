@@ -37,13 +37,18 @@ const logInUserSchemaValidate = {
 
 const editUserSchemaValidate = {
   body: {
-    firstName: Joi.string().default(''),
-    lastName: Joi.string().default(''),
-    email: Joi.string().required().messages({
-      'string.empty': 'поле "электронная почта" не может быть пустым',
-      'any.required': 'поле "электронная почта" является обязательным',
+    firstName: Joi.string().messages({
+      'string.empty': 'поле "имя" не может быть пустым',
     }),
-    sex: Joi.string().default(''),
+    lastName: Joi.string().messages({
+      'string.empty': 'поле "фамилия" не может быть пустым',
+    }),
+    email: Joi.string().messages({
+      'string.empty': 'поле "электронная почта" не может быть пустым',
+    }),
+    sex: Joi.string().messages({
+      'string.empty': 'поле "пол" не может быть пустым',
+    }),
   },
 };
 
