@@ -7,9 +7,15 @@ import userValidation from '../validations/user.validations';
 export const profileRouter = express.Router();
 
 profileRouter
-  .route('/:userId')
+  .route('/:id')
   .put(
     auth(''),
     validate(userValidation.editUserSchemaValidate),
     ProfileController.editUserInfoById,
   );
+
+profileRouter.get(
+  '/:id',
+  validate(userValidation.getUserSchemaValidate),
+  ProfileController.getUserInfoById,
+);

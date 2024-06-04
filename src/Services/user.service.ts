@@ -11,6 +11,8 @@ import { EditUserDto } from '../Dto/user/edit-user.dto';
 import { EditedUserDtoInterface } from '../Dto/user/interfaces/edited-user.dto.interface';
 import { LogInUserDto } from '../Dto/user/login-user.dto';
 import tokenService from './token.service';
+import UserDto from '../Dto/user/user.dto';
+import { UserEntityWithPhoto } from './types/UserEntityWithPhoto';
 
 class UserService {
   private readonly userExceptionHandler = new PrismaExceptionHandler(
@@ -85,6 +87,31 @@ class UserService {
           throw new ApiError(httpStatus.BAD_GATEWAY, 'что-то пошло не так');
         }
       });
+  }
+
+  async getUserInfoById(userId: number): Promise<UserDto> {
+    try {
+      const user: UserEntityWithPhoto | null = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          photo: true,
+        },
+      });
+
+      if (user === null) {
+        console.log(user);
+        throw new ApiError(httpStatus.NOT_FOUND, 'пользователь не найден');
+      }
+      return new UserDto(user);
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw this.userExceptionHandler.handleError(error);
+      } else if (error instanceof ApiError) {
+        throw new ApiError(error.statusCode, error.message);
+      } else {
+        throw new ApiError(httpStatus.BAD_GATEWAY, 'что-то пошло не так');
+      }
+    }
   }
 }
 
