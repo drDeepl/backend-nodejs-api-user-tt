@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { CreateUserDto } from '../Dto/user/create-user.dto';
 import prisma from '../../prisma';
 import { hashData } from '../utils/bcrypt';
@@ -14,16 +14,17 @@ class UserService {
   private readonly userExceptionHandler = new PrismaExceptionHandler(
     userPrismaErrorMessage,
   );
-  async createUser(dto: CreateUserDto): Promise<void> {
+  async createUser(dto: CreateUserDto): Promise<User> {
     try {
       dto.password = await hashData(dto.password);
-      await prisma.user.create({
+      const createdUser: User = await prisma.user.create({
         data: {
           firstName: dto.firstName,
           passwordHash: dto.password,
           email: dto.email,
         },
       });
+      return createdUser;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         throw this.userExceptionHandler.handleError(error);
@@ -37,8 +38,8 @@ class UserService {
     userId: number,
     dto: EditUserDto,
   ): Promise<EditedUserDtoInterface> {
-    try {
-      return prisma.user.update({
+    return prisma.user
+      .update({
         select: {
           id: true,
           firstName: true,
@@ -53,14 +54,14 @@ class UserService {
           sex: dto.sex,
         },
         where: { id: userId },
+      })
+      .catch((error) => {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          throw this.userExceptionHandler.handleError(error);
+        } else {
+          throw new ApiError(httpStatus.BAD_GATEWAY, 'что-то пошло не так');
+        }
       });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        throw this.userExceptionHandler.handleError(error);
-      } else {
-        throw new ApiError(httpStatus.BAD_GATEWAY, 'что-то пошло не так');
-      }
-    }
   }
 }
 

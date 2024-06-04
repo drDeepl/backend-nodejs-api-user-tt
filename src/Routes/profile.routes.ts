@@ -1,6 +1,9 @@
 import express from 'express';
 import ProfileController from '../Controllers/profile.controller';
+import auth from '../middlewares/auth';
 
 export const profileRouter = express.Router();
 
-profileRouter.put('/:userId', ProfileController.editUserInfoById);
+profileRouter
+  .route('/:userId')
+  .put(auth(''), ProfileController.editUserInfoById);

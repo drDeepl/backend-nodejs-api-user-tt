@@ -11,6 +11,7 @@ export class PrismaExceptionHandler {
     this.errorMessages = errorMessages;
   }
   public handleError(error: any): ApiError {
+    console.log(`error code: ${error.code}`);
     if (error.code in this.errorMessages) {
       return new ApiError(
         this.errorMessages[error.code].statusCode,

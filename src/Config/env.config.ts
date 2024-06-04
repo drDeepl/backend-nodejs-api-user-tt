@@ -9,7 +9,7 @@ const envVarsSchema = Joi.object()
     DEV_STATUS: Joi.string().valid('prod', 'develop', 'test').required(),
     PORT: Joi.number().default(3000),
     JWT_SECRET: Joi.string().required(),
-    JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30),
+    JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(60),
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(7),
     DATABASE_URL: Joi.string().required(),
   })
@@ -28,7 +28,7 @@ export default {
   port: envVars.PORT,
   jwt: {
     secret: envVars.JWT_SECRET,
-    accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
+    accessExpirationMonites: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
   },
 };
