@@ -1,7 +1,7 @@
 import { Prisma, User } from '@prisma/client';
 import { CreateUserDto } from '../Dto/user/create-user.dto';
 import prisma from '../../prisma';
-import { hashData } from '../utils/bcrypt';
+import { hashData, compareDataHash } from '../utils/bcrypt';
 import { userPrismaErrorMessage } from '../utils/errorMessages';
 import { PrismaExceptionHandler } from '../utils/PrismaExceptionHandler';
 import ApiError from '../utils/ApiError';
@@ -9,6 +9,8 @@ import httpStatus from 'http-status';
 import { EditUserDto } from '../Dto/user/edit-user.dto';
 
 import { EditedUserDtoInterface } from '../Dto/user/interfaces/edited-user.dto.interface';
+import { LogInUserDto } from '../Dto/user/login-user.dto';
+import tokenService from './token.service';
 
 class UserService {
   private readonly userExceptionHandler = new PrismaExceptionHandler(
@@ -31,6 +33,26 @@ class UserService {
       } else {
         throw new ApiError(httpStatus.BAD_GATEWAY, 'что-то пошло не так');
       }
+    }
+  }
+
+  async logIn(dto: LogInUserDto) {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+
+    if (user === null) {
+      throw new ApiError(
+        httpStatus.NOT_FOUND,
+        'Данного пользователя не существует',
+      );
+    }
+    if (await compareDataHash(dto.password, user.passwordHash)) {
+      return tokenService.generateTokens(user.id);
+    } else {
+      throw new ApiError(httpStatus.NOT_FOUND, 'неверный пароль');
     }
   }
 

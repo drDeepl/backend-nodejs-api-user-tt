@@ -12,13 +12,13 @@ const createUserSchemaValidate = {
     }),
     password: Joi.string()
       .required()
+      .pattern(new RegExp('^[a-zA-Z0-9]{5,30}$'))
       .messages({
         'string.empty': 'поле с паролем не может быть пустым',
         'any.required': 'пароль является обязательным полем',
-        'string.pattern':
+        'string.pattern.base':
           'пароль должен содержать буквы латинского алфавита и иметь длину от 5 до 30 символов',
-      })
-      .pattern(new RegExp('^[a-zA-Z0-9]{5,30}$')),
+      }),
   },
 };
 
@@ -35,4 +35,20 @@ const logInUserSchemaValidate = {
   },
 };
 
-export default { createUserSchemaValidate, logInUserSchemaValidate };
+const editUserSchemaValidate = {
+  body: {
+    firstName: Joi.string().default(''),
+    lastName: Joi.string().default(''),
+    email: Joi.string().required().messages({
+      'string.empty': 'поле "электронная почта" не может быть пустым',
+      'any.required': 'поле "электронная почта" является обязательным',
+    }),
+    sex: Joi.string().default(''),
+  },
+};
+
+export default {
+  createUserSchemaValidate,
+  logInUserSchemaValidate,
+  editUserSchemaValidate,
+};

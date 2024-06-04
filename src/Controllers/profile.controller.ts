@@ -15,21 +15,19 @@ class ProfileController {
         req.body.email,
         req.body.sex,
       );
-      const { error, value } = editUserDto.validate();
-      if (error) {
-        const errorMessage = error.details
-          .map((details) => details.message)
-          .join(', ');
-        console.log(errorMessage);
-        const statusCode = httpStatus.BAD_REQUEST;
-        res.status(statusCode).send(new ApiError(statusCode, errorMessage));
+      const editedUser: EditedUserDtoInterface = await UserService.editUserById(
+        +req.params.userId,
+        editUserDto,
+      );
+      res.status(httpStatus.OK).send(editedUser);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        res.status(error.statusCode).send(error);
       } else {
-        const editedUser: EditedUserDtoInterface =
-          await UserService.editUserById(+req.params.userId, editUserDto);
-        res.status(httpStatus.OK).send(editedUser);
+        res
+          .status(httpStatus.BAD_GATEWAY)
+          .send(new ApiError(httpStatus.BAD_GATEWAY, 'что-то пошло не так'));
       }
-    } catch (error: any) {
-      res.status(error.statusCode).send(error);
     }
   };
 }
