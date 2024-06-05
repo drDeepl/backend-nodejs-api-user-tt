@@ -1,4 +1,3 @@
-import { User } from '@prisma/client';
 import { UserEntityWithPhoto } from '../../Services/types/UserEntityWithPhoto';
 
 class UserDto {

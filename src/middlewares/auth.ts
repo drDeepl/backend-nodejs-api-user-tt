@@ -6,7 +6,7 @@ import { NextFunction, Request, Response } from 'express';
 import { User } from '@prisma/client';
 // import { jwtStrategy } from '../Config/passport.config';
 // import { jwtVerify } from '../Config/passport.config';
-import { verify } from 'jsonwebtoken';
+import { TokenExpiredError, verify } from 'jsonwebtoken';
 import config from '../Config/env.config';
 import UnauthorizedError from '../errors/UnauthorizedError';
 import prisma from '../../prisma';
@@ -49,13 +49,13 @@ const verifyCallback = (
 // };
 
 const auth = async (req: Request, res: Response, next: NextFunction) => {
-  console.log('auth');
+  console.log('auth user');
   try {
     const { authorization } = req.headers;
     if (authorization === undefined) {
       throw new UnauthorizedError();
     }
-    // Cut the received string and takes the token at position 1.
+
     const token = (authorization && authorization.split(' ')[1]) || '';
     console.log(token);
     const payload: any = verify(token, config.jwt.secret);
@@ -63,20 +63,24 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
     if (!payload) {
       throw new UnauthorizedError();
     }
-    const user = await prisma.user.findFirst({
+    const user = await prisma.user.findUnique({
+      select: {
+        id: true,
+      },
       where: {
-        id: payload.id,
+        id: payload.sub,
       },
     });
 
     if (!user) throw new UnauthorizedError();
-
-    const { passwordHash, ...loggedUser } = user;
-    req.user = loggedUser;
-
+    req.user = user;
     next();
   } catch (error) {
-    console.log(error);
+    if (error instanceof TokenExpiredError) {
+      return res
+        .status(httpStatus.FORBIDDEN)
+        .json({ message: 'время действия токена истекло' });
+    }
     next(error);
   }
 };

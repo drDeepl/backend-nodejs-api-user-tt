@@ -8,7 +8,7 @@ import ApiError from '../utils/ApiError';
 import httpStatus from 'http-status';
 import { EditUserDto } from '../Dto/user/edit-user.dto';
 
-import { EditedUserDtoInterface } from '../Dto/user/interfaces/edited-user.dto.interface';
+import { EditedUserDtoInterface } from '../interfaces/edited-user.dto.interface';
 import { LogInUserDto } from '../Dto/user/login-user.dto';
 import tokenService from './token.service';
 import UserDto from '../Dto/user/user.dto';

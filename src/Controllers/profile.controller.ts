@@ -4,8 +4,9 @@ import httpStatus from 'http-status';
 import ApiError from '../utils/ApiError';
 import { EditUserDto } from '../Dto/user/edit-user.dto';
 
-import { EditedUserDtoInterface } from '../Dto/user/interfaces/edited-user.dto.interface';
+import { EditedUserDtoInterface } from '../interfaces/edited-user.dto.interface';
 import UserDto from '../Dto/user/user.dto';
+import { RequestExtended } from '../interfaces/request-extended';
 
 class ProfileController {
   async editUserInfoById(req: Request, res: Response) {
@@ -53,6 +54,9 @@ class ProfileController {
         fileName: req.file?.filename,
         path: req.file?.path,
       };
+      return res
+        .status(httpStatus.OK)
+        .json({ message: 'файл успешно добавлен' });
     } catch (error) {
       next(error);
     }

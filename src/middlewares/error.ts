@@ -11,8 +11,9 @@ export const errors = (
   next: NextFunction,
 ) => {
   logger.error(error);
+  console.log(error.message);
   const statusCode = error.statusCode ?? httpStatus.BAD_GATEWAY;
-  const message = error.statusCode ? error.message : 'что-то пошло не так';
+  const message = error.statusCode ? error.msg : 'что-то пошло не так';
 
   return res.status(statusCode).json({ message: message });
 };
