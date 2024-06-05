@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import UserService from '../Services/user.service';
 import httpStatus from 'http-status';
 import ApiError from '../utils/ApiError';
@@ -38,6 +38,27 @@ class ProfileController {
         Number(req.params.id),
       );
       res.status(httpStatus.OK).send(userDto);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        res.status(error.statusCode).send(error);
+      } else {
+        res
+          .status(httpStatus.BAD_GATEWAY)
+          .send(new ApiError(httpStatus.BAD_GATEWAY, 'что-то пошло не так'));
+      }
+    }
+  }
+
+  async uploadPhoto(req: Request, res: Response) {
+    console.log('ProfileController.uploadPhoto');
+    try {
+      if (!req.file) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Файл не найден');
+      }
+      const dataUpload = {
+        fileName: req.file?.filename,
+        path: req.file?.path,
+      };
     } catch (error) {
       if (error instanceof ApiError) {
         res.status(error.statusCode).send(error);

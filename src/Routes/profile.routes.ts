@@ -3,7 +3,7 @@ import ProfileController from '../Controllers/profile.controller';
 import auth from '../middlewares/auth';
 import validate from '../middlewares/validate';
 import userValidation from '../validations/user.validations';
-
+import { multerMiddleware } from '../middlewares/file';
 export const profileRouter = express.Router();
 
 profileRouter
@@ -18,4 +18,10 @@ profileRouter.get(
   '/:id',
   validate(userValidation.getUserSchemaValidate),
   ProfileController.getUserInfoById,
+);
+
+profileRouter.put(
+  '/photo/upload',
+  multerMiddleware,
+  ProfileController.uploadPhoto,
 );
