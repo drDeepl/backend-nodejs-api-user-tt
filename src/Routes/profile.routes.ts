@@ -9,19 +9,19 @@ export const profileRouter = express.Router();
 profileRouter
   .route('/:id')
   .put(
-    auth(''),
+    auth,
     validate(userValidation.editUserSchemaValidate),
     ProfileController.editUserInfoById,
   );
 
-profileRouter.get(
-  '/:id',
-  validate(userValidation.getUserSchemaValidate),
-  ProfileController.getUserInfoById,
-);
+profileRouter
+  .route('/:id')
+  .get(
+    auth,
+    validate(userValidation.getUserSchemaValidate),
+    ProfileController.getUserInfoById,
+  );
 
-profileRouter.put(
-  '/photo/upload',
-  multerMiddleware,
-  ProfileController.uploadPhoto,
-);
+profileRouter
+  .route('/photo/upload')
+  .put(auth, multerMiddleware, ProfileController.uploadPhoto);

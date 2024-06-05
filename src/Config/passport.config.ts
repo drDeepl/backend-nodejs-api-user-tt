@@ -13,6 +13,7 @@ const jwtOptions = {
 
 const jwtVerify: VerifyCallback = async (payload, done) => {
   try {
+    console.log('jwtVerify');
     const user = await prisma.user.findUnique({
       select: {
         id: true,
@@ -30,4 +31,5 @@ const jwtVerify: VerifyCallback = async (payload, done) => {
   }
 };
 
-export const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
+// export const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
+export { jwtVerify };

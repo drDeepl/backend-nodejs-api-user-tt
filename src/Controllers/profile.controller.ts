@@ -32,24 +32,18 @@ class ProfileController {
     }
   }
 
-  async getUserInfoById(req: Request, res: Response) {
+  async getUserInfoById(req: Request, res: Response, next: NextFunction) {
     try {
       const userDto: UserDto = await UserService.getUserInfoById(
         Number(req.params.id),
       );
       res.status(httpStatus.OK).send(userDto);
     } catch (error) {
-      if (error instanceof ApiError) {
-        res.status(error.statusCode).send(error);
-      } else {
-        res
-          .status(httpStatus.BAD_GATEWAY)
-          .send(new ApiError(httpStatus.BAD_GATEWAY, 'что-то пошло не так'));
-      }
+      next(error);
     }
   }
 
-  async uploadPhoto(req: Request, res: Response) {
+  async uploadPhoto(req: Request, res: Response, next: NextFunction) {
     console.log('ProfileController.uploadPhoto');
     try {
       if (!req.file) {
@@ -60,13 +54,7 @@ class ProfileController {
         path: req.file?.path,
       };
     } catch (error) {
-      if (error instanceof ApiError) {
-        res.status(error.statusCode).send(error);
-      } else {
-        res
-          .status(httpStatus.BAD_GATEWAY)
-          .send(new ApiError(httpStatus.BAD_GATEWAY, 'что-то пошло не так'));
-      }
+      next(error);
     }
   }
 }
