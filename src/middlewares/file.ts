@@ -2,13 +2,12 @@ import * as path from 'path';
 import config from '../Config/env.config';
 import { Request, Response } from 'express';
 import multer from 'multer';
-import ApiError from '../utils/ApiError';
-import httpStatus from 'http-status';
 import { extensions, mimeTypes } from '../utils/constants';
 import * as fs from 'fs';
 import { encodeBase64 } from '../utils/bcrypt';
 import { WriteFileError } from '../errors/WriteFileError';
 import InvalidFileExtensionError from '../errors/InvalideFileExtension.Error';
+import FileExistsError from '../errors/FileExistsError';
 const uploadFilePath = path.resolve(
   __dirname,
   '../..',
@@ -48,7 +47,7 @@ const storageFile: multer.StorageEngine = multer.diskStorage({
     checkDirExistsElseCreateOrCallbackError(userDir, callback);
   },
   filename(
-    req: Request,
+    req: Request | any,
     file: Express.Multer.File,
     callback: (error: Error | null, filename: string) => void,
   ): void {
@@ -57,7 +56,12 @@ const storageFile: multer.StorageEngine = multer.diskStorage({
       file.originalname,
     )}`;
     console.log(`FILENAME: ${filename}`);
-    callback(null, filename);
+    const filePath = `${uploadFilePath}\\${req.user.id}\\${filename}`;
+    if (fs.existsSync(filePath)) {
+      callback(new FileExistsError(), '');
+    } else {
+      callback(null, filename);
+    }
   },
 });
 
@@ -67,7 +71,6 @@ const multerMiddleware = multer({
   fileFilter: (req: Request, file: Express.Multer.File, callback) => {
     console.log('FILE');
     console.log(file);
-
     const extension: boolean =
       extensions.indexOf(path.extname(file.originalname).toLowerCase()) >= 0;
     console.log(`ORIGINAL FILE NAME: ${file.originalname}`);
