@@ -12,7 +12,7 @@ const envVarsSchema = Joi.object()
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.string().default('60m'),
     JWT_REFRESH_EXPIRATION_DAYS: Joi.string().default('7d'),
     DATABASE_URL: Joi.string().required(),
-    PATH_UPLOAD_PHOTO: Joi.string().required().default('public/uploads/photo'),
+    PATH_UPLOAD_PHOTO: Joi.string().required().default('/uploads/photo'),
   })
   .unknown();
 

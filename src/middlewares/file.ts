@@ -11,7 +11,7 @@ import FileExistsError from '../errors/FileExistsError';
 
 const uploadFilePath = path.resolve(
   __dirname,
-  '../..',
+  '../../public',
   config.file.pathUpload.photo,
 );
 
@@ -22,6 +22,7 @@ const checkDirExistsElseCreateOrCallbackError = async (
   callback: any,
 ): Promise<void> => {
   console.log('checkDirExistsElseCreateOrCallbackError');
+  console.log(`DIR ${dirName}`);
   await fs.promises.mkdir(dirName, { recursive: true });
   callback(null, dirName);
 };

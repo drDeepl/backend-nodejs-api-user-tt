@@ -1,15 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../Services/user.service';
+import ProfileService from '../Services/profile.service';
 import httpStatus from 'http-status';
 import ApiError from '../utils/ApiError';
 import { EditUserDto } from '../Dto/user/edit-user.dto';
-
 import { EditedUserDtoInterface } from '../interfaces/edited-user.dto.interface';
 import UserDto from '../Dto/user/user.dto';
-import { string } from 'joi';
 import FileNotExists from '../errors/FileNotExists';
-import LargeFileSizeError from '../errors/LargeFileSizeError';
-import { multerMiddleware } from '../middlewares/file';
+import { AuthUserInterface } from '../interfaces/AuthUserInterface';
+import { DataUploadInterface } from '../interfaces/DataUploadInterface';
 
 class ProfileController {
   async editUserInfoById(req: Request, res: Response) {
@@ -53,26 +52,13 @@ class ProfileController {
       if (!req.file) {
         throw new FileNotExists();
       }
-      console.log('PROFILE CONTROLLER: FILE');
-      console.log(req.file);
-      interface DataUpload {
-        fieldname: string;
-        originalname: string;
-        encoding: string;
-        mimetype: string;
-        destination: string;
-        filename: string;
-        path: string;
-        size: number;
-      }
-
-      const dataUpload: DataUpload = req.file;
-      console.log('UPLOAD DATA');
-      console.log(dataUpload);
-
-      return res
-        .status(httpStatus.OK)
-        .json({ message: 'файл успешно добавлен' });
+      const dataUpload: DataUploadInterface = req.file;
+      const authUser = req.user as AuthUserInterface;
+      const photoUrl: string = await ProfileService.saveDataUpload(
+        dataUpload,
+        authUser.id,
+      );
+      return res.status(httpStatus.OK).json({ photo: photoUrl });
     } catch (error) {
       next(error);
     }
