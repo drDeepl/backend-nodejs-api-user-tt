@@ -6,6 +6,10 @@ import { EditUserDto } from '../Dto/user/edit-user.dto';
 
 import { EditedUserDtoInterface } from '../interfaces/edited-user.dto.interface';
 import UserDto from '../Dto/user/user.dto';
+import { string } from 'joi';
+import FileNotExists from '../errors/FileNotExists';
+import LargeFileSizeError from '../errors/LargeFileSizeError';
+import { multerMiddleware } from '../middlewares/file';
 
 class ProfileController {
   async editUserInfoById(req: Request, res: Response) {
@@ -47,12 +51,25 @@ class ProfileController {
     console.log('ProfileController.uploadPhoto');
     try {
       if (!req.file) {
-        throw new ApiError(httpStatus.BAD_REQUEST, 'Файл не найден');
+        throw new FileNotExists();
       }
-      const dataUpload = {
-        fileName: req.file?.filename,
-        path: req.file?.path,
-      };
+      console.log('PROFILE CONTROLLER: FILE');
+      console.log(req.file);
+      interface DataUpload {
+        fieldname: string;
+        originalname: string;
+        encoding: string;
+        mimetype: string;
+        destination: string;
+        filename: string;
+        path: string;
+        size: number;
+      }
+
+      const dataUpload: DataUpload = req.file;
+      console.log('UPLOAD DATA');
+      console.log(dataUpload);
+
       return res
         .status(httpStatus.OK)
         .json({ message: 'файл успешно добавлен' });
