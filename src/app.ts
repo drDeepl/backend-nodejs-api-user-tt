@@ -6,6 +6,9 @@ import httpStatus from 'http-status';
 import ApiError from './utils/ApiError';
 import { errors } from './middlewares/error';
 
+import path from 'path';
+
+
 
 const app: Express = express();
 
@@ -19,11 +22,18 @@ app.use('/api/v1/profile', profileRouter);
 
 
 
-app.use((req, res, next) => {
+
+
+app.use(errors);
+
+app.use(express.static(path.resolve(
+  __dirname,
+  '../public',)))
+
+  app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
 });
 
 
-app.use(errors);
 
 export default app;
