@@ -6,13 +6,17 @@ const createUserSchemaValidate = {
       'string.empty': 'поле с именем не может быть пустым',
       'any.required': 'имя является обязательным полем',
     }),
-    email: Joi.string().required().messages({
-      'string.empty': 'поле с электронная почтой не может быть пустым',
-      'any.required': 'электронная почта является обязательным полем',
-    }),
+    email: Joi.string()
+      .required()
+      .pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
+      .messages({
+        'string.empty': 'поле с электронная почтой не может быть пустым',
+        'any.required': 'электронная почта является обязательным полем',
+        'string.pattern.base': 'недействительная электронная почта',
+      }),
     password: Joi.string()
       .required()
-      .pattern(new RegExp('^[a-zA-Z0-9]{5,30}$'))
+      .pattern(/^[a-zA-Z0-9]{5,30}$/)
       .messages({
         'string.empty': 'поле с паролем не может быть пустым',
         'any.required': 'пароль является обязательным полем',

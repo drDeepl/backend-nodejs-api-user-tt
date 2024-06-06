@@ -64,10 +64,9 @@ class ProfileController {
   }
   async getProfiles(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log('ProfileController.getUsers');
-      const page = req.query.page ?? '';
+      const page = Number(req.query.page);
       const profiles: UserDto[] = await ProfileService.getProfilesByPage(+page);
-      return res.status(httpStatus.OK).json({ profiles });
+      return res.status(httpStatus.OK).json({ page, profiles });
     } catch (error) {
       next(error);
     }
