@@ -12,7 +12,7 @@ import { EditedUserDtoInterface } from '../interfaces/edited-user.dto.interface'
 import { LogInUserDto } from '../Dto/user/login-user.dto';
 import tokenService from './token.service';
 import UserDto from '../Dto/user/user.dto';
-import { UserEntityWithPhoto } from './types/UserEntityWithPhoto';
+import { TokensType } from './types/TokensType';
 
 class UserService {
   private readonly userExceptionHandler = new PrismaExceptionHandler(
@@ -38,7 +38,7 @@ class UserService {
     }
   }
 
-  async logIn(dto: LogInUserDto) {
+  async logIn(dto: LogInUserDto): Promise<TokensType> {
     const user = await prisma.user.findUnique({
       where: {
         email: dto.email,
@@ -91,10 +91,10 @@ class UserService {
 
   async getUserInfoById(userId: number): Promise<UserDto> {
     try {
-      const user: UserEntityWithPhoto | null = await prisma.user.findUnique({
+      const user: User | null = await prisma.user.findUnique({
         where: { id: userId },
         include: {
-          photo: true,
+          photo: { select: { fileName: true } },
         },
       });
 

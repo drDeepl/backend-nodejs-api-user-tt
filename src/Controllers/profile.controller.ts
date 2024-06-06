@@ -6,7 +6,6 @@ import { EditUserDto } from '../Dto/user/edit-user.dto';
 
 import { EditedUserDtoInterface } from '../interfaces/edited-user.dto.interface';
 import UserDto from '../Dto/user/user.dto';
-import { RequestExtended } from '../interfaces/request-extended';
 
 class ProfileController {
   async editUserInfoById(req: Request, res: Response) {
