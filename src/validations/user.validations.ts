@@ -52,17 +52,8 @@ const editUserSchemaValidate = {
   },
 };
 
-const getUserSchemaValidate = {
-  param: {
-    id: Joi.number().required().messages({
-      'any.required': 'пропущен параметр id',
-    }),
-  },
-};
-
 export default {
   createUserSchemaValidate,
   logInUserSchemaValidate,
   editUserSchemaValidate,
-  getUserSchemaValidate,
 };

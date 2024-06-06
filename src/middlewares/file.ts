@@ -13,12 +13,6 @@ const uploadFilePath = path.resolve(
   __dirname + `../../../public/${config.file.pathUpload.photo}`,
 );
 
-// const uploadFilePath = path.resolve(
-//   __dirname,
-//   '../../public',
-//   config.file.pathUpload.photo,
-// );
-
 console.log(uploadFilePath);
 
 const fileSizeMB: number = 10;

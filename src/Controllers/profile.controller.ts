@@ -35,7 +35,7 @@ class ProfileController {
     }
   }
 
-  async getUserInfoById(req: Request, res: Response, next: NextFunction) {
+  async getProfile(req: Request, res: Response, next: NextFunction) {
     try {
       const userDto: UserDto = await UserService.getUserInfoById(
         Number(req.params.id),
@@ -47,7 +47,6 @@ class ProfileController {
   }
 
   async uploadPhoto(req: Request, res: Response, next: NextFunction) {
-    console.log('ProfileController.uploadPhoto');
     try {
       if (!req.file) {
         throw new FileNotExists();
@@ -59,6 +58,16 @@ class ProfileController {
         authUser.id,
       );
       return res.status(httpStatus.OK).json({ photo: photoUrl });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getProfiles(req: Request, res: Response, next: NextFunction) {
+    try {
+      console.log('ProfileController.getUsers');
+      const page = req.query.page ?? '';
+      const profiles: UserDto[] = await ProfileService.getProfilesByPage(+page);
+      return res.status(httpStatus.OK).json({ profiles });
     } catch (error) {
       next(error);
     }

@@ -109,7 +109,7 @@ class UserService {
       if (user === null) {
         throw new ApiError(httpStatus.NOT_FOUND, 'пользователь не найден');
       }
-      console.log(user);
+
       return new UserDto(user);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
