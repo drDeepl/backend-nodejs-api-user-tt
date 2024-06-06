@@ -46,6 +46,10 @@
 - Prisma ORM
 - logger winston
 
+## База данных
+
+Экспорт базы данных находится в папке `database`
+
 ## Запуск приложения
 
 `npm run dev`
