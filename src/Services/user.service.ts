@@ -13,6 +13,7 @@ import { LogInUserDto } from '../Dto/user/login-user.dto';
 import tokenService from './token.service';
 import UserDto from '../Dto/user/user.dto';
 import { TokensType } from './types/TokensType';
+import { UserExtendedPhoto } from '../interfaces/UserExtendedPhotoInterface';
 
 class UserService {
   private readonly userExceptionHandler = new PrismaExceptionHandler(
@@ -91,17 +92,24 @@ class UserService {
 
   async getUserInfoById(userId: number): Promise<UserDto> {
     try {
-      const user: User | null = await prisma.user.findUnique({
-        where: { id: userId },
-        include: {
-          photo: { select: { fileName: true } },
+      const user: UserExtendedPhoto | null = await prisma.user.findUnique({
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          passwordHash: true,
+          sex: true,
+          createdAt: true,
+          photo: true,
         },
+        where: { id: userId },
       });
 
       if (user === null) {
-        console.log(user);
         throw new ApiError(httpStatus.NOT_FOUND, 'пользователь не найден');
       }
+      console.log(user);
       return new UserDto(user);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {

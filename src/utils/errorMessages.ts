@@ -49,3 +49,28 @@ export const userPrismaErrorMessage: {
     description: 'Запрашиваемый пользователь не существует',
   },
 };
+
+export const photoPrismaErrorMessage: {
+  [key: string]: { statusCode: number; description: string };
+} = {
+  P2002: {
+    statusCode: httpStatus.FORBIDDEN,
+    description: 'Загружаемое фото уже существует',
+  },
+  P2013: {
+    statusCode: httpStatus.BAD_REQUEST,
+    description: 'Пропущено одно из обязательных полей',
+  },
+  P2015: {
+    statusCode: httpStatus.BAD_REQUEST,
+    description: 'Обязательное поле не может быть null',
+  },
+  P2016: {
+    statusCode: httpStatus.BAD_REQUEST,
+    description: 'Превышено допустимое количество символов',
+  },
+  P2025: {
+    statusCode: httpStatus.NOT_FOUND,
+    description: 'Запрашиваемое фото не существует',
+  },
+};

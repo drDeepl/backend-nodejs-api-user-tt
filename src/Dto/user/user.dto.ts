@@ -1,4 +1,5 @@
-import { User } from '@prisma/client';
+import config from '../../Config/env.config';
+import { UserExtendedPhoto } from '../../interfaces/UserExtendedPhotoInterface';
 
 class UserDto {
   firstName: string;
@@ -6,13 +7,17 @@ class UserDto {
   email: string;
   sex: string;
   createdAt: string;
+  photos: string[];
 
-  constructor(user: User) {
+  constructor(user: UserExtendedPhoto) {
     this.firstName = user.firstName;
     this.lastName = user.lastName;
     this.email = user.email;
     this.sex = user.sex;
     this.createdAt = user.createdAt.toISOString();
+    this.photos = user.photo.map(
+      (photo) => `${config.file.pathUpload.photo}/${user.id}/${photo.fileName}`,
+    );
   }
 }
 

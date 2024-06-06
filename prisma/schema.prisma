@@ -24,7 +24,7 @@ model Photo {
   id       Int    @id @default(autoincrement())
   fileName String @db.VarChar(255)
   path     String @db.VarChar(255)
-  userId   Int    @unique
+  userId   Int    
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("photos")

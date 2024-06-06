@@ -3,13 +3,13 @@ import httpStatus from 'http-status';
 import { DataUploadInterface } from '../interfaces/DataUploadInterface';
 import ApiError from '../utils/ApiError';
 import { PrismaExceptionHandler } from '../utils/PrismaExceptionHandler';
-import { userPrismaErrorMessage } from '../utils/errorMessages';
+import { photoPrismaErrorMessage } from '../utils/errorMessages';
 import prisma from '../../prisma';
 import config from '../Config/env.config';
 
 class ProfileService {
   private readonly userExceptionHandler = new PrismaExceptionHandler(
-    userPrismaErrorMessage,
+    photoPrismaErrorMessage,
   );
 
   async saveDataUpload(
